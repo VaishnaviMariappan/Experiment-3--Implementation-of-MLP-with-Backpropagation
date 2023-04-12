@@ -5,6 +5,7 @@ To implement a Multilayer Perceptron for Multi classification
 
 ## EQUIPMENTS REQUIRED:
 Hardware – PCs
+
 Anaconda – Python 3.7 Installation / Google Colab /Jupiter Notebook
 
 ## RELATED THEORETICAL CONCEPT:
@@ -100,7 +101,7 @@ In the backward pass,
 
 ## ALGORITHM:
 
-1.Import the necessary libraries of python.
+1. Import the necessary libraries of python.
 
 2. After that, create a list of attribute names in the dataset and use it in a call to the read_csv() function of the pandas library along with the name of the CSV file containing the dataset.
 
@@ -109,16 +110,86 @@ In the backward pass,
 4. Call the train_test_split() function that further divides the dataset into training data and testing data with a testing data size of 20%.
 Normalize our dataset. 
 
-5.In order to do that we call the StandardScaler() function. Basically, the StandardScaler() function subtracts the mean from a feature and scales it to the unit variance.
+5. In order to do that we call the StandardScaler() function. Basically, the StandardScaler() function subtracts the mean from a feature and scales it to the unit variance.
 
-6.Invoke the MLPClassifier() function with appropriate parameters indicating the hidden layer sizes, activation function, and the maximum number of iterations.
+6. Invoke the MLPClassifier() function with appropriate parameters indicating the hidden layer sizes, activation function, and the maximum number of iterations.
 
-7.In order to get the predicted values we call the predict() function on the testing data set.
+7. In order to get the predicted values we call the predict() function on the testing data set.
 
 8. Finally, call the functions confusion_matrix(), and the classification_report() in order to evaluate the performance of our classifier.
 
 ## PROGRAM 
+```python
+import pandas as pd
+import sklearn
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix
 
+df = pd.read_csv('IRIS.csv')
+df.head
+
+names = ['sepal-length','sepal-width','petal-length','petal-width','Class']
+
+# Take first 4 columns ans assign them to variable "X"
+X = df.iloc[:,0:4]
+# Take first 5th columns and assign them to variable "Y". Object dtype refers to strings
+Y = df.select_dtypes(include=[object])
+X.head()
+Y.head()
+
+# Y actually contains all categories or classes
+Y.species.unique()
+
+# Now transforming categorial into numerical values
+le = preprocessing.LabelEncoder()
+Y = Y.apply(le.fit_transform)
+Y.head()
+
+# Train and test split (80% of data into training set and 20% into test data)
+X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size = 0.20)
+
+# Feature Scaling
+scaler = StandardScaler() 
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+mlp = MLPClassifier(hidden_layer_sizes=(10,10,10),max_iter=1000)
+mlp.fit(X_train,Y_train.values.ravel())
+predictions = mlp.predict(X_test)
+print(predictions)
+
+# Evaluation of algorithm performance in classifying flowers
+print(confusion_matrix(Y_test,predictions))
+print(classification_report(Y_test,predictions))
+```
 ## OUTPUT 
 
+### df.head:
+![image](https://user-images.githubusercontent.com/94169913/231536789-32bb211f-a147-4a96-af8d-64362224ea6e.png)
+
+### X.head():
+![image](https://user-images.githubusercontent.com/94169913/231536863-7df4af41-6978-4921-96f0-41ef0c5ec10f.png)
+
+### Y.head():
+![image](https://user-images.githubusercontent.com/94169913/231536940-5d279c75-8153-4bb5-bac9-26d9449641f8.png)
+
+### Unique Values in Y:
+![image](https://user-images.githubusercontent.com/94169913/231537109-7a367830-948a-4e52-8964-f33c126596e8.png)
+
+### Transforming Categorical to numerical values:
+![image](https://user-images.githubusercontent.com/94169913/231537201-c799ec93-eb97-47a5-8a86-041f12b3d8f6.png)
+
+### Predictions:
+![image](https://user-images.githubusercontent.com/94169913/231537276-1d83a967-da02-4d57-b7cd-d01cf0267e6f.png)
+
+### Confusion Matrix:
+![image](https://user-images.githubusercontent.com/94169913/231537331-3850223c-771c-43ea-94da-394f35c0f0e7.png)
+
+### Classification report:
+![image](https://user-images.githubusercontent.com/94169913/231537404-850d7313-e29b-4f27-a2c1-f717c13f0bef.png)
+
 ## RESULT
+Thus, a program to implement Multilayer Perceptron for Multi Classification is successfully created and executed.
